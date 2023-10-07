@@ -3,83 +3,85 @@ from pydub import AudioSegment
 import speech_recognition as sr
 from pydub.silence import split_on_silence 
 
-# segmentation by silence method
-# this method has better results, but only works if there isn't any background noise/music
-def transcription_generator_by_silence():
-    # cleanup previous transcription
-    if os.path.exists('res/transcription.txt'):
-        os.remove('res/transcription.txt')
+TRANSCRIPTION_OUTPUT_DIR='res/transcription.txt'
+SOURCE_AUDIO_DIR='res/audio.wav'
 
-    audio = AudioSegment.from_file('res/audio.wav')
+# cleanup previous transcription
+if os.path.exists(TRANSCRIPTION_OUTPUT_DIR):
+    os.remove(TRANSCRIPTION_OUTPUT_DIR)
+
+r = sr.Recognizer()
+
+# segmentation by silence method
+# better transcription accuracy but cannot handle music/background noise
+def transcription_generator_by_silence():
+    audio = AudioSegment.from_file(SOURCE_AUDIO_DIR)
 
     print(f'Length {len(audio)} | Loudness: {audio.dBFS}')
 
     output_directory = 'res/audio_chunks'
+    if not os.path.exists(output_directory):
+        os.mkdir(output_directory)
 
     chunks = split_on_silence(audio, min_silence_len=500, silence_thresh=-40, keep_silence=1000)
 
-    r = sr.Recognizer()
+    for i, chunk in enumerate(chunks):
+        chunk.export(f'{output_directory}/chunk_{i}.wav', format='wav')
 
-    with open('res/transcription.txt', 'a') as output_file:
-        for i, chunk in enumerate(chunks):
-            chunk.export(f'{output_directory}/chunk_{i}.wav', format='wav')
-
-            with sr.AudioFile(f'{output_directory}/chunk_{i}.wav') as source:
-                try:
-                    audio_data = r.record(source)
-                    output_file.write(r.recognize_google(audio_data) + '\n')
-                    print(f"Progress: {i + 1}/{len(chunks)}")
-                except sr.UnknownValueError:
-                    print(f"Progress: {i + 1}/{len(chunks)} - audio not recognized")
-                except sr.RequestError as e:
-                    print(f"Progress: {i + 1}/{len(chunks)} - request err: {e}")
-
-            os.remove(f'{output_directory}/chunk_{i}.wav')
-
-
-# segmentation by time method
-# this works but it sometimes cuts off words, and is kind of worse ngl
-def transcription_generator(audio_path='res/audio.wav'):
-    # cleanup previous transcription
-    if os.path.exists('res/transcription.txt'):
-        os.remove('res/transcription.txt')
-
-    max_segment_length = 15  # seconds
-
-    r = sr.Recognizer()
-
-    with sr.AudioFile(audio_path) as source:
-        audio_duration = source.DURATION
+        with sr.AudioFile(f'{output_directory}/chunk_{i}.wav') as source:
+            audio_data = r.record(source)
+            transcription=''
+            try:
+                transcription = r.recognize_google(audio_data)
+                print(f"Progress: {i + 1}/{len(chunks)}")
+            except sr.UnknownValueError:
+                print(f"Unknown value error for chunk {i + 1}")
+            except sr.RequestError as e:
+                print(f"Request err: {e} for chunk {i + 1}")
+            
+            with open(TRANSCRIPTION_OUTPUT_DIR, 'a') as f:
+                    f.write(transcription + '\n')     
         
-        # segments needed
-        num_segments = int(audio_duration / max_segment_length) + 1
+        os.remove(f'{output_directory}/chunk_{i}.wav') # remove temp chunk
     
-    with sr.AudioFile(audio_path) as segment_source:
-        for i in range(num_segments):
-            start_time = i * max_segment_length
-            end_time = min((i + 1) * max_segment_length, audio_duration)
+    os.rmdir(output_directory) # remove temp directory
+        
+# segmentation by time method
+# sometimes words get cut, but can handle noise
+def transcription_generator():
+    max_segment_length = 10  # Maximum segment length in seconds
 
-            # audio segment
+    with sr.AudioFile(SOURCE_AUDIO_DIR) as source:
+        audio_duration = source.DURATION
+        num_segments = int(audio_duration / max_segment_length) + 1 # segments needed
+
+    for i in range(num_segments):
+        start_time = i * max_segment_length
+        end_time = min((i + 1) * max_segment_length, audio_duration)
+
+        # audio segment
+        with sr.AudioFile(SOURCE_AUDIO_DIR) as segment_source:
             segment_audio = r.record(segment_source, duration=end_time - start_time, offset=start_time)
 
-            segment_transcript = ''
-            try:
-                # progress
-                print(f"Progress: {i + 1}/{num_segments}")
-                # recognize each segment
-                segment_transcript = r.recognize_google(segment_audio)
-            except sr.UnknownValueError:
-                print(f"Segment {i + 1} could not be transcribed.")
-            except sr.RequestError as e:
-                print(f"Request error for segment {i + 1}: {e}")
+            transcript = try_recognize(segment_audio, num_segments, i)
 
-            # Open and close the file for each write operation
-            with open('res/transcript.txt', 'a') as f:
-                f.write(segment_transcript + '\n')
+            with open(TRANSCRIPTION_OUTPUT_DIR, 'a') as f:
+                f.write(transcript + '\n')
+                f.flush()
+
+def try_recognize(audio, max, i):
+    t=''
+    try:
+        print(f"Progress: {i + 1}/{max}")
+        t = r.recognize_google(audio)
+    except sr.UnknownValueError:
+        print(f"Segment {i + 1} could not be transcribed.")
+    except sr.RequestError as e:
+        print(f"Request error for segment {i + 1}: {e}")
+    return t
 
 # for converting audio formats (ffmpeg required)
 def audio_converter(filename='audio', type='mp3'):
-    folder='res/'
 
     audio = AudioSegment.from_mp3(f'{folder}{filename}.mp3')
 
@@ -93,3 +95,4 @@ def audio_converter(filename='audio', type='mp3'):
     while not os.path.exists("f'{folder}audio.flac"):
         pass
 
+transcription_generator()
