@@ -17,8 +17,8 @@ import speech_recognition as sr
 
 # -----pt 1 works, pt 2 works, but pt 1 + 2 doesn't! yay! ------ #
 
-audio = 'res/Mitosis.wav'
-max_segment_length = 20  # Maximum segment length in seconds
+audio = 'res/audio.wav'
+max_segment_length = 20  # seconds
 
 r = sr.Recognizer()
 
