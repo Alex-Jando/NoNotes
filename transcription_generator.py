@@ -17,7 +17,7 @@ import speech_recognition as sr
 
 # -----pt 1 works, pt 2 works, but pt 1 + 2 doesn't! yay! ------ #
 
-audio = 'audio.flac'
+audio = 'res/Mitosis.wav'
 max_segment_length = 20  # Maximum segment length in seconds
 
 r = sr.Recognizer()
@@ -49,7 +49,7 @@ for i in range(num_segments):
         except sr.RequestError as e:
             print(f"Request error for segment {i + 1}: {e}")
 
-        with open('transcript.txt', 'a') as f:
+        with open('res/transcript.txt', 'a') as f:
             f.write(segment_transcript + '\n')
             
 
