@@ -1,3 +1,4 @@
+#flask v
 blinker==1.6.2
 certifi==2023.7.22
 charset-normalizer==3.3.0
@@ -23,3 +24,9 @@ git+https://github.com/huggingface/peft.git
 transformers>=4.28.0
 sentencepiece
 gradio
+#transcript v
+ffmpeg==1.4
+pydub==0.25.1
+requests==2.31.0; python_version >= '3.7'
+speechrecognition==3.10.0; python_version >= '3.8'
+
