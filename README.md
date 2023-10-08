@@ -66,7 +66,7 @@ It may take a few minutes to configure the AI the first time it's run.
 
 ## Configuration
 
-You can customize the app's behavior by modifying the arguments passed when running the main.py file.
+You can customize the app's behavior by modifying the arguments passed when running the `main.py` file.
 
 ```bash
 python src/main.py --ip "HOST IP" --port "HOST PORT"
