@@ -5,6 +5,7 @@ import os
 
 app = Flask(__name__, template_folder='templates')
 
+<<<<<<< Updated upstream
 @app.route('/mp3tonotes', methods=['POST', 'GET'])
 def mp3tonotes():
     return render_template('mp3tonotes.html')
@@ -19,6 +20,23 @@ def _api_mp3tonotes():
             
             # create transcription
             tg()
+=======
+@app.route('/')
+def home():
+    return(render_template('home.html'))
+
+@app.route('/notes')
+def home():
+    return(render_template('notes.html'))
+
+@app.route('/confirm-save')
+def home():
+    return(render_template('home.html'))
+
+@app.route('/')
+def home():
+    return(render_template('home.html'))
+>>>>>>> Stashed changes
 
             # wait until transcription is done
             while get_transcription() is None:
