@@ -5,5 +5,15 @@ app = Flask(__name__, template_folder='templates')
 @app.route('/')
 def home():
     return(render_template('home.html'))
+@app.route('/notes')
+def home():
+    return(render_template('home.html'))
+@app.route('/confirm-save')
+def home():
+    return(render_template('home.html'))
+@app.route('/')
+def home():
+    return(render_template('home.html'))
+
 
 app.run(debug=True, host='localhost', port=80)
