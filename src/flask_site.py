@@ -9,6 +9,7 @@ app = Flask(__name__, template_folder='templates')
 def mp3tonotes():
     return render_template('mp3tonotes.html')
     
+    
 @app.route('/api/mp3tonotes', methods=['POST'])
 def _api_mp3tonotes():
     
@@ -37,7 +38,7 @@ def _home():
 
 @app.route('/notes')
 def _notes():
-    return(render_template('notes.html'))
+    return(render_template('home.html'))
 
 @app.route('/confirm-save')
 def _confirm_save():
