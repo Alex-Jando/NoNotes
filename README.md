@@ -8,7 +8,7 @@ The **No Notes** app is a powerful tool that allows users to record audio and au
 
 - **Audio Recording**: Easily record audio using your device's microphone.
 - **Transcription**: The app transcribes the audio into text.
-- **notes**: uses ai to turn your raw audio into summarized point form notes
+- **Notes**: Uses AI to turn your raw audio into summarized point-form notes.
 - **Save Notes**: Save your transcriptions, and transcribed notes for easy access.
 - **Secure and Private**: Your audio and transcribed notes are kept private and secure.
 
@@ -66,7 +66,7 @@ It may take a few minutes to configure the AI the first time it's run.
 
 ## Configuration
 
-You can customize the app's behavior by modifying the arguments passed when running the main.py file.
+You can customize the app's behavior by modifying the arguments passed when running the `main.py` file.
 
 ```bash
 python src/main.py --ip "HOST IP" --port "HOST PORT"
