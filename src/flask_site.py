@@ -12,36 +12,50 @@ def mp3tonotes():
     
 @app.route('/api/mp3tonotes', methods=['POST'])
 def _api_mp3tonotes():
+    
     try:
-        file = request.files['audio']
-        if file:
-            file.save('../uploads/audio.wav')
-            
-            # create transcription
-            tg()
-            # wait until transcription is done
-            while get_transcription() is None:
-                pass
-            
-            os.remove('../uploads/audio.wav')
 
-            return jsonify({'transcription': get_transcription()})
-        else:
-            return render_template('mp3tonotes.html')
+        file = request.files['audio']
+
+        file.save('../uploads/audio.wav')
+            
+        tg()
+
+        while get_transcription() is None:
+            pass
+        
+        os.remove('../uploads/audio.wav')
+
+        return jsonify({'transcription': get_transcription()})
+    
     except Exception as e:
+
         return jsonify({'error': str(e)})
+
+@app.route('/')
+def _home():
+    return(render_template('home.html'))
+
+@app.route('/')
+def _home():
+    return(render_template('home.html'))
 
 @app.route('/notes')
 def _notes():
     return(render_template('home.html'))
 
-@app.route('/confirmsave')
-def _confirmsave():
+@app.route('/confirm-save')
+def _confirm_save():
+    return(render_template('notes.html'))
+
+@app.route('/confirm-save')
+def _confirm_save():
     return(render_template('home.html'))
+
 
 @app.route('/')
 def _():
-    return redirect('/mp3tonotes')
-    # return(render_template('home.html'))
+    return(render_template('home.html'))
+    return(render_template('home.html'))
 
 app.run(debug=True, host='localhost', port=80)
