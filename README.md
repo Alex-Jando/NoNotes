@@ -7,7 +7,8 @@ The **No Notes** app is a powerful tool that allows users to record audio and au
 ## Features
 
 - **Audio Recording**: Easily record audio using your device's microphone.
-- **Transcription**: The app transcribes the audio into text notes.
+- **Transcription**: The app transcribes the audio into text.
+- **notes**: uses ai to turn your raw audio into summarized point form notes
 - **Save Notes**: Save your transcriptions, and transcribed notes for easy access.
 - **Secure and Private**: Your audio and transcribed notes are kept private and secure.
 
@@ -60,7 +61,8 @@ It may take a few minutes to configure the AI the first time it's run.
 4. Press the "Stop" button when you're finished recording.
 5. Watch as the app transcribes your audio into text notes.
 6. Click "Save" to store your transcription, and transcribed notes for later reference.
-7. Export your notes in your preferred format or share them with others.
+7. Export your notes in your preferred format or share them with       others.
+8. Click the notes icon and view your saved notes
 
 ## Configuration
 
