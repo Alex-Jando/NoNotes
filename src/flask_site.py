@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from transcription_generator import transcription_generator as tg
 from transcription_generator import TRANSCRIPTION_OUTPUT_DIR, get_transcription
 import os
@@ -7,36 +7,40 @@ app = Flask(__name__, template_folder='templates')
 
 @app.route('/mp3tonotes', methods=['POST', 'GET'])
 def mp3tonotes():
-    if request.method == 'POST':
-        try:
-            file = request.files['audio']
-            if file:
-                file.save('../uploads/audio.wav')
-                
-                # create transcription
-                tg()
+    return render_template('mp3tonotes.html')
+    
+    
+@app.route('/api/mp3tonotes', methods=['POST'])
+def _api_mp3tonotes():
+    try:
+        file = request.files['audio']
+        if file:
+            file.save('../uploads/audio.wav')
+            
+            # create transcription
+            tg()
 
-                # wait until transcription is done
-                while get_transcription() is None:
-                    pass
-                
-                os.remove('../uploads/audio.wav')
-                return render_template('mp3tonotes.html', message='success', transcription=get_transcription())
-            else:
-                return render_template('mp3tonotes.html')
-        except Exception as e:
-            return "An error occurred: " + str(e)
-    else:
-        return render_template('mp3tonotes.html')
+            # wait until transcription is done
+            while get_transcription() is None:
+                pass
+            
+            os.remove('../uploads/audio.wav')
+
+            return jsonify({'transcription': get_transcription()})
+        else:
+            return render_template('mp3tonotes.html')
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 @app.route('/notes')
-def home():
+def _notes():
     return(render_template('home.html'))
-@app.route('/confirm-save')
-def home():
+@app.route('/confirmsave')
+def _confirmsave():
     return(render_template('home.html'))
 @app.route('/')
-def home():
-    return(render_template('home.html'))
+def _():
+    return redirect('/mp3tonotes')
+    # return(render_template('home.html'))
 
 app.run(debug=True, host='localhost', port=80)

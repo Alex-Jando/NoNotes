@@ -10,35 +10,46 @@
             <h1>Never Take Notes Again!</h1>
         </header>
         <main>
-            <form action="/mp3tonotes" method="POST" enctype="multipart/form-data">
-                <label for="audio">Select an audio file (.wav):</label>
-                <input type="file" name="audio" id="audio" accept=".wav" required>
-                <button type="submit">Convert To Notes</button>
-            </form>
-            {% if message == "success" %}
-                <p style="color:green">{{ message }}</p>
-            {% endif %}
+            <label for="audio">Select an audio file (.wav):</label>
+            <input type="file" name="audio" id="audio" accept=".wav" required>
+            <button type="submit" onclick="mp3_to_text();">Convert To Notes</button>
 
-            {{transcription}}
+            <div id="transcription"></div>
+
         </main>
         <footer>
-            <p>Developed By Alex Jando, Henri Maxon, Ahoura Moussavi, Aki [last name]</p>
-            <p>Copyright October 2023 &copy; | Rights Reserved &circledR;</p>
+            <p>Developed By Alex Jando, Henri Maxon, Ahoura Mousavi, Aki Xuu</p>
+            <p>Copyright October 2023 &copy; | Rights Reserved &reg;</p>
             <p>HappyHacks October 2023 Submission</p>
-            <p><a href="[github]">[github]</a></p>
+            <p><a href="https://github.com/Alex-Jando/HappyHack-Oct2023">https://github.com/Alex-Jando/HappyHack-Oct2023</a></p>
         </footer>
     </body>
     <script>
-        fetch("/mp3tonotes", {
-            method: "POST",
-            body: JSON.stringify({
-                userId: 1,
-                title: "Fix my bugs",
-                completed: false
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
+        async function mp3_to_text() {
+
+            startLoadingAnimation();
+
+            audio_file = document.getElementById('audio').files[0];
+            const form_data = new FormData();
+            form_data.append('audio', audio_file);
+            const response = await fetch("/api/mp3tonotes", {
+                                        method: "POST",
+                                        body: form_data,
+                                    });
+            json = await response.json();
+            if (json.error) {
+                document.getElementById('transcription').innerHTML = json.error
+            } else {
+                document.getElementById('transcription').innerHTML = json.transcription
             }
-            });
+
+            stopLoadingAnimation();            
+        }
+        function startLoadingAnimation() {
+            return
+        }
+        function stopLoadingAnimation() {
+            return
+        }
     </script>
 </html>
