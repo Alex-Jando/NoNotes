@@ -2,4 +2,4 @@ echo "If any error occurs, please check if you have installed python3.11 and pip
 echo "Installing Requirements..."
 pip install -r requirements.txt
 echo "Starting..."
-py src/main.py
+python src/main.py
