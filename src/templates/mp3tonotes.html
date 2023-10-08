@@ -18,9 +18,9 @@
         </header>
         <main>
             <form>
-                <label for="audio">Select an audio file (.mp3):</label>
-                <input type="file" name="audio" id="audio" accept=".mp3" required>
-                <button id="audioSubmit" type="submit" onclick="mp3_to_text();">Convert To Notes</button>
+                <label for="audio">Select an audio file (.wav):</label>
+                <input type="file" name="audio" id="audio" accept=".wav" required>
+                <button id="audioSubmit" type="submit" onclick="wav_to_text();">Convert To Notes</button>
             </form>
 
             <div id="loader" class="hidden"><div>Converting... (This may take a few minutes)</div><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
@@ -42,7 +42,7 @@
         </footer>
     </body>
     <script>
-        async function mp3_to_text() {
+        async function wav_to_text() {
 
             startLoadingAnimation();
 
