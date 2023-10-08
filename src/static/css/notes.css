@@ -3,7 +3,9 @@ html, body {
 }
 
 .note {
+    background-color: #fff;
     padding: 20px;
+    margin-top: 14px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -11,7 +13,6 @@ html, body {
 .container {
     max-width: 600px;
     margin: 20px auto;
-    background-color: #fff;
 }
 
 .a {
