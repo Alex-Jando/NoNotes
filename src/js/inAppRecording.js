@@ -13,10 +13,15 @@ function handlerFunction(stream){
             recordAudio.src= Url.createObjectURL(blob);
             recordAudio.controls=true;
             recordAudio.autoplay=true;
-            sendData(blob) //to do: fetch
+            sendData(blob) 
         }
     }
 }     
+
+sendData(data){
+    
+}
+
 record.onclick = e => {
     record.disabled = true;
     record.style.backgroundColor = "blue";
