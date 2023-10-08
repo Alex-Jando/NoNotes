@@ -24,14 +24,16 @@
             </form>
 
             <div id="loader" class="hidden"><div>Converting... (This may take a few minutes)</div><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
-            <ul id="summary" class="hidden"></ul>
+            <ul id="notes" class="hidden"></ul>
+            <div id="transcript" class="hidden"></div>
 
             <div class="hidden" id="options">
                 <br><hr><br>
+                <h3>Save note</h3>
                 <label for="noteTitle">Pick a note title:</label>
                 <input type="text" name="noteTitle" id="noteTitle" required>
-                <button id="submitNoteTitle" type="submit" onclick="">Confirm</button>
-                <button id="copyClipboard" onclick="copySummary();">Copy to Clipboard</button>
+                <button id="submitNoteTitle" type="submit" onclick="save_note()">Confirm Save</button>
+                <button id="copyClipboard" onclick="copynotes();">Copy to Clipboard</button>
             </div>
         </main>
         <footer>
@@ -42,6 +44,33 @@
         </footer>
     </body>
     <script>
+        async function save_note() {
+
+            title = document.getElementById('noteTitle').value
+            text = document.getElementById('transcript').innerHTML
+            notes = document.getElementById('notes').innerHTML
+
+            body = {title: title, text: text, notes: notes}
+
+            console.log(body)
+
+            const response = await fetch('/api/addnote', {
+                method: 'POST',
+                body: body,
+            });
+
+            if (response.ok) {
+                json = await response.json();
+                if (json.success === true) {
+                    console.log('Added Note')
+                } else {
+                    console.error('Error Adding Note: ' + json.error)
+                }
+            } else {
+                console.error('Response NOT OK')
+            }
+        }
+
         async function wav_to_text() {
 
             startLoadingAnimation();
@@ -57,32 +86,35 @@
             if(response.ok) {
                 json = await response.json();
                 if (json.error) {
-                    document.getElementById('summary').innerHTML = json.error
+                    document.getElementById('notes').innerHTML = json.error
                 } else {
-                    document.getElementById('summary').innerHTML = json.summary
+                    document.getElementById('notes').innerHTML = json.notes
+                    document.getElementById('transcript').innerHTML = json.transcription
                 }
             } else {
-                document.getElementById('summary').innerHTML = "Response not OK.";
+                document.getElementById('notes').innerHTML = "Failed.";
             }
 
             stopLoadingAnimation();            
         }
+
         function startLoadingAnimation() {
-            document.getElementById('summary').style.display = 'none';
+            document.getElementById('notes').style.display = 'none';
             document.getElementById('options').style.display = 'none';
             document.getElementById('loader').style.display = 'block';
             document.getElementById('audioSubmit').disabled = true;
         }
+
         function stopLoadingAnimation() {
-            document.getElementById('summary').style.display = 'block';
+            document.getElementById('notes').style.display = 'block';
             document.getElementById('options').style.display = 'block';
             document.getElementById('loader').style.display = 'none';
             document.getElementById('audioSubmit').disabled = false;
         }
-    
-        async function copySummary () {
+
+        async function copynotes () {
             try {
-                await navigator.clipboard.writeText(document.getElementById('summary').innerHTML);
+                await navigator.clipboard.writeText(document.getElementById('notes').innerHTML);
                 console.log('Content copied to clipboard');
             } catch (err) {
             console.error('Failed to copy: ', err);

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/notes.css">
+    <title>Saved Notes</title>
+</head>
+    <body>
+        <div class="notes">
+            {% for note in notes %}
+                <div class="note">
+                    <h3>{{note[0]}}</h3>
+                    <p style="display: none;">{{note[1]}}</p>
+                    <p>{{note[2]}}</p>
+                    
+                </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

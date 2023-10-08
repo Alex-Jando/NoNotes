@@ -12,9 +12,8 @@ async function send_audio(audioBlob) {
 
 navigator.mediaDevices.getUserMedia({ audio: true })
   .then(stream => {
-    const mediaRecorder = new MediaRecorder(stream);
+    const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/mp3' });
     
-
     const audioChunks = [];
     mediaRecorder.addEventListener("dataavailable", event => {
       audioChunks.push(event.data);
@@ -27,13 +26,12 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     }
     
     stopRecord = document.getElementById('stopRecord')
-
     stopRecord.onclick = () => {
         mediaRecorder.stop();
     }
     
     mediaRecorder.addEventListener("stop", async () => {
-      const audioBlob = await getWaveBlob(audioChunks);
+      const audioBlob = new Blob(audioChunks, {type: 'audio/wav'});
       send_audio(audioBlob)
     });
   }

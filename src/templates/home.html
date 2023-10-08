@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
     <title>MP3 To Notes</title>
 </head>
     <body>
-        <p>
-            <button id="record"> start </button>
-            <button id="stopRecord"> stop </button>
-        </p>
+        <div id="controls">
+            <button id="recordButton">Record</button>
+            <button id="pauseButton" disabled>Pause</button>
+            <button id="stopButton" disabled>Stop</button>
+         </div>
+         <div id="formats">Format: start recording to see sample rate</div>
+           <p><strong>Recordings:</strong></p>
     
+           <div class="navbar">
+            <a href="#home" class="active">Home</a>
+            <a href="#notes">Notes</a>
+            <a href="#save">Save</a>
+          </div>
     </body>
-    <div class="navbar">
-        <a href="#home" class="active">Home</a>
-        <a href="#notes">Notes</a>
-        <a href="#save">Save</a>
-      </div>
-    <script src="static/js/inAppRecording.js"></script>
+    <script src="../static/js/app.js"></script>
+    <script src="../static/js/recorder.js"></script>
 </html>
