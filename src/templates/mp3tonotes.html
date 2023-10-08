@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MP3 To Notes</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/loader.css">
     <style>
         #loader {
             display: none;
@@ -22,10 +23,8 @@
                 <button id="audioSubmit" type="submit" onclick="mp3_to_text();">Convert To Notes</button>
             </form>
 
-            <div id="loader" class="hidden">Converting...<span></span></div>
-            <div class="">
-                <ul id="summary" class="hidden"></ul>
-            </div>
+            <div id="loader" class="hidden"><div>Converting... (This may take a few minutes)</div><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
+            <ul id="summary" class="hidden"></ul>
 
             <div class="hidden" id="options">
                 <br><hr><br>

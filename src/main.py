@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, jsonify
 
-from transcription_mp3 import transcription_generator as tg
-
+from transcription_generator import transcription_generator as tg
+from transcription_generator import TRANSCRIPTION_OUTPUT_DIR, get_transcription
 from summarize import summarize_text
 
 import os
@@ -16,21 +16,34 @@ def mp3tonotes():
     
 @app.route('/api/mp3tonotes', methods=['POST'])
 def _api_mp3tonotes():
+    
     try:
 
         file = request.files['audio']
 
+        file.save(os.path.join(os.path.dirname(__file__), '..', 'uploads/audio.wav'))
         file.save('../uploads/' + file.filename)
         transcription = tg(file.filename)
+        tg()
+
+        while get_transcription() is None:
+            pass
+        
+        os.remove(os.path.join(os.path.dirname(__file__), '..', 'uploads/audio.wav'))
+
+        transcription = get_transcription()
 
         response = requests.post('http://bark.phon.ioc.ee/punctuator', data = {'text': transcription})
+
         if not response.ok:
             raise Exception('Error adding punctuation to transcription!')
+        
         summary = summarize_text(response.text)
 
-        return jsonify({'summary': summary})
+        return jsonify({'summary': ''.join([f'<li>{bullet}</li>' for bullet in summary])})
     
     except Exception as e:
+
         return jsonify({'error': str(e)})
 
 @app.route('/')
@@ -41,8 +54,8 @@ def _home():
 def _notes():
     return(render_template('home.html'))
 
-@app.route('/confirm-save')
-def _confirm_save():
+@app.route('/confirmsave')
+def _confirmsave():
     return(render_template('notes.html'))
 
 app.run(debug=True, host='localhost', port=80)
