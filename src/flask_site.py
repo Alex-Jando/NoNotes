@@ -28,5 +28,15 @@ def mp3tonotes():
             return "An error occurred: " + str(e)
     else:
         return render_template('mp3tonotes.html')
-        
+
+@app.route('/notes')
+def home():
+    return(render_template('home.html'))
+@app.route('/confirm-save')
+def home():
+    return(render_template('home.html'))
+@app.route('/')
+def home():
+    return(render_template('home.html'))
+
 app.run(debug=True, host='localhost', port=80)
