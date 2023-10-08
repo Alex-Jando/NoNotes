@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, jsonify
 
-from transcription_generator import transcription_generator as tg
-from transcription_generator import TRANSCRIPTION_OUTPUT_DIR, get_transcription
+from transcription_mp3 import transcription_generator as tg
 from summarize import summarize_text
 
 import os
@@ -20,24 +19,13 @@ def _api_mp3tonotes():
     try:
 
         file = request.files['audio']
-
-        file.save(os.path.join(os.path.dirname(__file__), '..', 'uploads/audio.wav'))
         file.save('../uploads/' + file.filename)
+        print(f"Saved file {file.filename}")
         transcription = tg(file.filename)
-        tg()
-
-        while get_transcription() is None:
-            pass
-        
-        os.remove(os.path.join(os.path.dirname(__file__), '..', 'uploads/audio.wav'))
-
-        transcription = get_transcription()
 
         response = requests.post('http://bark.phon.ioc.ee/punctuator', data = {'text': transcription})
-
         if not response.ok:
             raise Exception('Error adding punctuation to transcription!')
-        
         summary = summarize_text(response.text)
 
         return jsonify({'summary': ''.join([f'<li>{bullet}</li>' for bullet in summary])})

@@ -5,8 +5,6 @@ import speech_recognition as sr
 
 r = sr.Recognizer()
 
-PROJECT_DIR = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
-
 def convert_mp3_to_wav(audio_path):
     print("Converting MP3 to WAV...")
     converted_audio_path = audio_path.replace('.mp3', '.wav')
@@ -19,7 +17,8 @@ def convert_mp3_to_wav(audio_path):
 def transcription_generator(filename):
     max_segment_length = 10
     transcript = ""
-    audio_path = os.path.join(PROJECT_DIR, 'uploads', filename)
+    audio_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'uploads', filename)
+    print(audio_path)
 
     if audio_path.endswith('.mp3'):
         audio_path = convert_mp3_to_wav(audio_path)
