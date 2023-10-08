@@ -1,6 +1,6 @@
 async function send_audio(audioBlob) {
     const formData = new FormData();
-    formData.append('audio', audioBlob, 'audio.wav');
+    formData.append('audio', audioBlob, 'audio.mp3');
     const response = await fetch('/api/mp3tonotes', {
         method: 'POST',
         body: formData

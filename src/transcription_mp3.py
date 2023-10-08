@@ -2,36 +2,27 @@ import os
 from pydub import AudioSegment
 import speech_recognition as sr
 
-script_dir = os.path.abspath(os.path.dirname(__file__))
-project_dir = os.path.abspath(os.path.join(script_dir, '..'))
+
 r = sr.Recognizer()
 
-TRANSCRIPTION_OUTPUT_DIR = os.path.join(project_dir, 'res', 'transcription.txt')
-SOURCE_AUDIO_DIR = os.path.join(project_dir, 'res', 'audio.mp3')
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
 
+def convert_mp3_to_wav(audio_path):
+    print("Converting MP3 to WAV...")
+    converted_audio_path = audio_path.replace('.mp3', '.wav')
+    audio = AudioSegment.from_mp3(audio_path)
+    audio.export(converted_audio_path, format="wav")
+    os.remove(audio_path) # remove original mp3
+    print("Conversion complete.")
+    return converted_audio_path
 
-def clear_transcription():
-    # delete previous transcription
-    if os.path.exists(TRANSCRIPTION_OUTPUT_DIR):
-        os.remove(TRANSCRIPTION_OUTPUT_DIR)
-    # create a new transcription file
-    with open(TRANSCRIPTION_OUTPUT_DIR, 'w+') as f:
-        f.write('')
-
-def transcription_generator(audio_path=SOURCE_AUDIO_DIR):
-    clear_transcription()
-
+def transcription_generator(filename):
     max_segment_length = 10
+    transcript = ""
+    audio_path = os.path.join(PROJECT_DIR, 'uploads', filename)
 
     if audio_path.endswith('.mp3'):
-        print("Converting MP3 to WAV...")
-        converted_audio_path = audio_path.replace('.mp3', '.wav')
-        audio = AudioSegment.from_mp3(audio_path)
-        audio.export(converted_audio_path, format="wav")
-        audio_path = converted_audio_path
-
-        while not os.path.exists(audio_path.replace('.mp3', '.wav')):
-            pass
+        audio_path = convert_mp3_to_wav(audio_path)
 
     with sr.AudioFile(audio_path) as source:
         audio_duration = source.DURATION
@@ -45,18 +36,14 @@ def transcription_generator(audio_path=SOURCE_AUDIO_DIR):
         with sr.AudioFile(audio_path) as segment_source:
             segment_audio = r.record(segment_source, duration=end_time - start_time, offset=start_time)
 
-            transcript = try_recognize(segment_audio, num_segments, i)
+            transcript_segment = try_recognize(segment_audio, num_segments, i)
+            transcript += transcript_segment + '\n' 
 
-            with open(TRANSCRIPTION_OUTPUT_DIR, 'a') as f:
-                f.write(transcript + '\n')
-                f.flush()
-
-    # if was converted from MP3 to WAV, remove the temporary WAV file
-    if audio_path != SOURCE_AUDIO_DIR:
-        os.remove(audio_path)
+    os.remove(audio_path)
+    return transcript
 
 def try_recognize(audio, max, i):
-    t=''
+    t = ''
     print(f"Progress: {i + 1}/{max}")
     try:
         t = r.recognize_google(audio)
@@ -65,12 +52,3 @@ def try_recognize(audio, max, i):
     except sr.RequestError as e:
         print(f"Request error for segment {i + 1}: {e}")
     return t
-
-def get_transcription():
-    if os.path.exists(TRANSCRIPTION_OUTPUT_DIR):
-        with open(TRANSCRIPTION_OUTPUT_DIR, 'r') as f:
-            return f.read()
-    else:
-        return None
-
-transcription_generator()

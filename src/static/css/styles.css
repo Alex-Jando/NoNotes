@@ -39,7 +39,7 @@ label {
 
 input[type="file"] {
     width: 100%;
-    padding: 10px;
+    padding: 10px 0 10px 10px ;
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -50,6 +50,7 @@ button {
     color: #fff;
     border: none;
     padding: 10px 20px;
+    cursor:pointer;
 }
 
 button:disabled {
@@ -76,7 +77,7 @@ button:hover:enabled {
 
 footer {
     text-align: center;
-    bottom: 
+    bottom: 0;
     color: #555;
 }
 

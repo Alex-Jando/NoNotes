@@ -16,13 +16,24 @@
             <h1>Never Take Notes Again!</h1>
         </header>
         <main>
-            <label for="audio">Select an audio file (.wav):</label>
-            <input type="file" name="audio" id="audio" accept=".wav" required>
-            <button id="audioSubmit" type="submit" onclick="mp3_to_text();">Convert To Notes</button>
+            <form>
+                <label for="audio">Select an audio file (.mp3):</label>
+                <input type="file" name="audio" id="audio" accept=".mp3" required>
+                <button id="audioSubmit" type="submit" onclick="mp3_to_text();">Convert To Notes</button>
+            </form>
 
-            <div id="loader" class="hidden">Converting...<span class="spinner"></span></div>
-            <ul id="summary" class="hidden"></ul>
+            <div id="loader" class="hidden">Converting...<span></span></div>
+            <div class="">
+                <ul id="summary" class="hidden"></ul>
+            </div>
 
+            <div class="hidden" id="options">
+                <br><hr><br>
+                <label for="noteTitle">Pick a note title:</label>
+                <input type="text" name="noteTitle" id="noteTitle" required>
+                <button id="submitNoteTitle" type="submit" onclick="">Confirm</button>
+                <button id="copyClipboard" onclick="copySummary();">Copy to Clipboard</button>
+            </div>
         </main>
         <footer>
             <p>Developed By Alex Jando, Henri Maxon, Ahoura Mousavi, Aki Xuu</p>
@@ -59,15 +70,24 @@
         }
         function startLoadingAnimation() {
             document.getElementById('summary').style.display = 'none';
-
+            document.getElementById('options').style.display = 'none';
             document.getElementById('loader').style.display = 'block';
             document.getElementById('audioSubmit').disabled = true;
         }
         function stopLoadingAnimation() {
             document.getElementById('summary').style.display = 'block';
-
+            document.getElementById('options').style.display = 'block';
             document.getElementById('loader').style.display = 'none';
             document.getElementById('audioSubmit').disabled = false;
+        }
+    
+        async function copySummary () {
+            try {
+                await navigator.clipboard.writeText(document.getElementById('summary').innerHTML);
+                console.log('Content copied to clipboard');
+            } catch (err) {
+            console.error('Failed to copy: ', err);
+            }
         }
     </script>
 </html>
