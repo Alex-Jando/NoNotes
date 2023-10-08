@@ -10,11 +10,16 @@
             <h1>Never Take Notes Again!</h1>
         </header>
         <main>
-            <form action="/mp3tonotes" method="POST">
-                <label for="file">Input A MP3 File: </label>
-                <input type="file" name="file" id="file">
+            <form action="/mp3tonotes" method="POST" enctype="multipart/form-data">
+                <label for="audio">Select an audio file (.wav):</label>
+                <input type="file" name="audio" id="audio" accept=".wav" required>
                 <button type="submit">Convert To Notes</button>
             </form>
+            {% if message == "success" %}
+                <p style="color:green">{{ message }}</p>
+            {% endif %}
+
+            {{transcription}}
         </main>
         <footer>
             <p>Developed By Alex Jando, Henri Maxon, Ahoura Moussavi, Aki [last name]</p>
@@ -23,4 +28,17 @@
             <p><a href="[github]">[github]</a></p>
         </footer>
     </body>
+    <script>
+        fetch("https://jsonplaceholder.typicode.com/todos", {
+  method: "POST",
+  body: JSON.stringify({
+    userId: 1,
+    title: "Fix my bugs",
+    completed: false
+  }),
+  headers: {
+    "Content-type": "application/json; charset=UTF-8"
+  }
+});
+    </script>
 </html>
