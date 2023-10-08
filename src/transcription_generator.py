@@ -72,6 +72,8 @@ def transcription_generator(audio_path=SOURCE_AUDIO_DIR):
                 f.write(transcript + '\n')
                 f.flush()
 
+
+
 def try_recognize(audio, max, i):
     t=''
     print(f"Progress: {i + 1}/{max}")

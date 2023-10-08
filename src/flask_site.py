@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect, jsonify
+
 from transcription_generator import transcription_generator as tg
 from transcription_generator import TRANSCRIPTION_OUTPUT_DIR, get_transcription
+from summarize import summarize_text
+
 import os
+import requests
 
 app = Flask(__name__, template_folder='templates')
 
@@ -26,7 +30,16 @@ def _api_mp3tonotes():
         
         os.remove('../uploads/audio.wav')
 
-        return jsonify({'transcription': get_transcription()})
+        transcription = get_transcription()
+
+        response = requests.post('http://bark.phon.ioc.ee/punctuator', data = {'text': transcription})
+
+        if not response.ok:
+            raise Exception('Error adding punctuation to transcription!')
+        
+        summary = summarize_text(response.text)
+
+        return jsonify({'summary': summary})
     
     except Exception as e:
 

@@ -21,7 +21,7 @@
             <button id="audioSubmit" type="submit" onclick="mp3_to_text();">Convert To Notes</button>
 
             <div id="loader" class="hidden">Converting...<span class="spinner"></span></div>
-            <div id="transcription" class="hidden"></div>
+            <ul id="summary" class="hidden"></ul>
 
         </main>
         <footer>
@@ -47,25 +47,24 @@
             if(response.ok) {
                 json = await response.json();
                 if (json.error) {
-                    document.getElementById('transcription').innerHTML = json.error
+                    document.getElementById('summary').innerHTML = json.error
                 } else {
-                    console.log(transcription)
-                    document.getElementById('transcription').innerHTML = json.transcription
+                    document.getElementById('summary').innerHTML = json.summary
                 }
             } else {
-                document.getElementById('transcription').innerHTML = "Response not OK.";
+                document.getElementById('summary').innerHTML = "Response not OK.";
             }
 
             stopLoadingAnimation();            
         }
         function startLoadingAnimation() {
-            document.getElementById('transcription').style.display = 'none';
+            document.getElementById('summary').style.display = 'none';
 
             document.getElementById('loader').style.display = 'block';
             document.getElementById('audioSubmit').disabled = true;
         }
         function stopLoadingAnimation() {
-            document.getElementById('transcription').style.display = 'block';
+            document.getElementById('summary').style.display = 'block';
 
             document.getElementById('loader').style.display = 'none';
             document.getElementById('audioSubmit').disabled = false;

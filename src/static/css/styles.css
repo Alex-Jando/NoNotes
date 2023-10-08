@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f4f4f4;
@@ -72,7 +76,7 @@ button:hover:enabled {
 
 footer {
     text-align: center;
-    margin-top: 20px;
+    bottom: 
     color: #555;
 }
 
