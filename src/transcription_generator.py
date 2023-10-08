@@ -38,13 +38,8 @@ def transcription_generator_by_silence():
         with sr.AudioFile(f'{output_directory}/chunk_{i}.wav') as source:
             audio_data = r.record(source)
             transcription=''
-            try:
-                transcription = r.recognize_google(audio_data)
-                print(f"Progress: {i + 1}/{len(chunks)}")
-            except sr.UnknownValueError:
-                print(f"Unknown value error for chunk {i + 1}")
-            except sr.RequestError as e:
-                print(f"Request err: {e} for chunk {i + 1}")
+
+            try_recognize(audio_data, len(chunks), i)
             
             with open(TRANSCRIPTION_OUTPUT_DIR, 'a+') as f:
                     f.write(transcription + '\n')     
@@ -79,11 +74,11 @@ def transcription_generator(audio_path=SOURCE_AUDIO_DIR):
 
 def try_recognize(audio, max, i):
     t=''
+    print(f"Progress: {i + 1}/{max}")
     try:
-        print(f"Progress: {i + 1}/{max}")
         t = r.recognize_google(audio)
     except sr.UnknownValueError:
-        print(f"Segment {i + 1} could not be transcribed.")
+        print(f"No transcription for {i + 1}.")
     except sr.RequestError as e:
         print(f"Request error for segment {i + 1}: {e}")
     return t
