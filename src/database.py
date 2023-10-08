@@ -11,7 +11,7 @@ def add_note(title, text, notes):
     cursor = connection.cursor()
     while get_note(token := secrets.token_urlsafe(16)) is not None:
         pass
-    cursor.execute('INSERT INTO notes VALUES (?, ?, ?)', (token, title, text, notes))
+    cursor.execute('INSERT INTO notes VALUES (?, ?, ?, ?)', (token, title, text, notes))
     connection.commit()
 
     return token

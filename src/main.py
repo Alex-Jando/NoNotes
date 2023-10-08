@@ -11,6 +11,10 @@ app = Flask(__name__, template_folder='templates')
 def _():
     return render_template('index.html')
     
+@app.route('/notes', methods=['GET'])
+def _notes():
+
+    return render_template('notes.html', notes=get_notes())
     
 @app.route('/api/mp3tonotes', methods=['POST'])
 def _api_mp3tonotes():
@@ -40,8 +44,6 @@ def _api_mp3tonotes():
 @app.route('/api/addnote', methods=['POST'])
 def _api_addnote():
 
-    print(request.json)
-
     form = request.json
 
     title = form['title'] or 'New Note'
@@ -54,27 +56,25 @@ def _api_addnote():
 
         return jsonify({'success': True, 'token': token})
 
-    except:
+    except Exception as e:
 
-        return jsonify({'success': False, 'error': 'Unable to save note!'})
+        return jsonify({'success': False, 'error': f'Unable to save note! Error: {e}'})
 
-@app.route('/notes', methods=['GET'])
-def _get_notes():
+@app.route('/api/deletenote', methods=['POST'])
+def _api_deletenote():
 
-    return render_template('notes.html', notes=get_notes())
+    form = request.json
 
-@app.route('/temp_page')
-def _temp_page():
-    return render_template('home.html')
+    token = form['token']
 
+    try:
 
-@app.route('/home')
-def _home():
-    return render_template('home.html')
+        delete_note(token)
 
+        return jsonify({'success': True})
 
-@app.route('/confirmsave')
-def _confirmsave():
-    return render_template('notes.html')
+    except Exception as e:
+
+        return jsonify({'success': False, 'error': f'Unable to delete note! Error: {e}'})
 
 app.run(debug=True, host='localhost', port=80)

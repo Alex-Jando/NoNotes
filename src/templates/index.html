@@ -1,32 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MP3 To Notes</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/loader.css">
-    <style>
-        #loader {
-            display: none;
-        }
-    </style>
-</head>
+{% extends "layout.html" %}
+{% block content %}
     <body>
-        <header>
-            <h1>Never Take Notes Again!</h1>
-        </header>
         <main>
-            <form>
-                <label for="audio">Select an audio file (.wav):</label>
-                <input type="file" name="audio" id="audio" accept=".wav" required>
-                <button id="audioSubmit" type="submit" onclick="wav_to_text();">Convert To Notes</button>
-            </form>
+            <label for="audio">Select an audio file (.wav):</label>
+            <input type="file" name="audio" id="audio" accept=".wav" required>
+            <button id="audioSubmit" type="submit" onclick="wav_to_text();">Upload</button>
 
-            <div id="loader" class="hidden"><div>Converting... (This may take a few minutes)</div><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
-            <ul id="notes" class="hidden"></ul>
-            <div id="transcript" class="hidden"></div>
+            <p>or</p>
 
+            <div id="controls">
+                <button id="recordButton">Record</button>
+                <button id="pauseButton" disabled>Pause</button>
+                <button id="stopButton" disabled>Stop</button>
+                <p id="recordingStatusNotifier"></p>
+            </div>
+
+            <div>
+                <div id="loader" class="hidden"><div>Processing... (This may take a few minutes)</div><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
+                <ul id="notes" class="hidden"></ul>
+                <div id="transcript" class="hidden"></div>
+                <button onclick="viewText();" id="change-view" style="display: none;">View Text</button>
+            </div>
+            
             <div class="hidden" id="options">
                 <br><hr><br>
                 <h3>Save note</h3>
@@ -36,14 +31,39 @@
                 <button id="copyClipboard" onclick="copynotes();">Copy to Clipboard</button>
             </div>
         </main>
-        <footer>
-            <p>Developed By Alex Jando, Henri Maxon, Ahoura Mousavi, Aki Xuu</p>
-            <p>Copyright October 2023 &copy; | Rights Reserved &reg;</p>
-            <p>HappyHacks October 2023 Submission</p>
-            <p><a href="https://github.com/Alex-Jando/HappyHack-Oct2023">https://github.com/Alex-Jando/HappyHack-Oct2023</a></p>
-        </footer>
+        
     </body>
     <script>
+        function viewText() {
+            notes = document.getElementById('notes')
+            text = document.getElementById('transcript')
+
+            notes.style.display = 'none';
+            text.style.display = 'block';
+
+            change_view = document.getElementById('change-view')
+
+            change_view.onclick = () => {
+                viewNotes();
+            }
+            change_view.innerHTML = 'View Notes'
+        }
+        
+        function viewNotes() {
+            notes = document.getElementById('notes')
+            text = document.getElementById('transcript')
+
+            notes.style.display = 'block';
+            text.style.display = 'none';
+
+            change_view = document.getElementById('change-view')
+
+            change_view.onclick = () => {
+                viewText();
+            }
+            change_view.innerHTML = 'View Text'
+        }
+
         async function save_note() {
 
             title = document.getElementById('noteTitle').value
@@ -52,73 +72,32 @@
 
             body = {title: title, text: text, notes: notes}
 
-            console.log(body)
-
             const response = await fetch('/api/addnote', {
                 method: 'POST',
-                body: body,
+                body: JSON.stringify(body),
+                headers: {'content-type': 'application/json'}
             });
 
-            if (response.ok) {
-                json = await response.json();
-                if (json.success === true) {
-                    console.log('Added Note')
-                } else {
-                    console.error('Error Adding Note: ' + json.error)
-                }
+            json = await response.json();
+            if (json.success === true) {
+                alert('Note Saved!')
+                location.reload();
             } else {
-                console.error('Response NOT OK')
+                alert('ERROR SAVING NOTE: ' + json.error)
             }
-        }
-
-        async function wav_to_text() {
-
-            startLoadingAnimation();
-
-            audio_file = document.getElementById('audio').files[0];
-            const form_data = new FormData();
-            form_data.append('audio', audio_file);
-
-            const response = await fetch("/api/mp3tonotes", {
-                                            method: "POST",
-                                            body: form_data,
-                                        });
-            if(response.ok) {
-                json = await response.json();
-                if (json.error) {
-                    document.getElementById('notes').innerHTML = json.error
-                } else {
-                    document.getElementById('notes').innerHTML = json.notes
-                    document.getElementById('transcript').innerHTML = json.transcription
-                }
-            } else {
-                document.getElementById('notes').innerHTML = "Failed.";
-            }
-
-            stopLoadingAnimation();            
-        }
-
-        function startLoadingAnimation() {
-            document.getElementById('notes').style.display = 'none';
-            document.getElementById('options').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('audioSubmit').disabled = true;
-        }
-
-        function stopLoadingAnimation() {
-            document.getElementById('notes').style.display = 'block';
-            document.getElementById('options').style.display = 'block';
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('audioSubmit').disabled = false;
         }
 
         async function copynotes () {
             try {
-                await navigator.clipboard.writeText(document.getElementById('notes').innerHTML);
-                console.log('Content copied to clipboard');
+                await navigator.clipboard.writeText(document.getElementById('transcript').innerText);
+                alert('Copied To Clipboard!');
             } catch (err) {
-            console.error('Failed to copy: ', err);
+                alert('Failed To Copy To Clipboard: ' + err);
             }
         }
     </script>
+    <script src="../static/js/app.js"></script>
+    <script src="../static/js/recorder.js"></script>
+    
 </html>
+{% endblock %}

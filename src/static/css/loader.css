@@ -1,3 +1,15 @@
+#loader {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#loader {
+  text-align: center;
+  margin-top: 20px;
+}
+
 .lds-ring {
     display: inline-block;
     position: relative;

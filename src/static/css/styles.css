@@ -2,11 +2,9 @@ html, body {
     height: 100%;
 }
 
-#loader {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+::selection {
+    color: white;
+    background: black;
 }
 
 body {
@@ -14,13 +12,21 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
 header {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 2em;
 }
 
 h1 {
@@ -31,7 +37,8 @@ h1 {
 
 main {
     max-width: 600px;
-    margin: 20px auto;
+    margin: auto auto;
+    margin-top: 4em;
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
@@ -42,14 +49,6 @@ label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
-}
-
-input[type="file"] {
-    width: 100%;
-    padding: 10px 0 10px 10px ;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 }
 
 button {
@@ -69,19 +68,6 @@ button:hover:enabled {
     background-color: #555;
 }
 
-#loader {
-    display: none;
-    text-align: center;
-    margin-top: 20px;
-}
-
-#transcription {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
 footer {
     text-align: center;
     bottom: 0;
@@ -97,20 +83,18 @@ footer a {
     display: none;
 }
 
-
-        
-        
 .navbar {
-  overflow: hidden;
   background-color: #333;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 12%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1;
+  padding: 0.5em 2em;
+  justify-content: space-between;
 }
 
 .navbar a {
-  float: left;
+  float: center;
   display: block;
   color: #f2f2f2;
   text-align: center;
@@ -120,7 +104,7 @@ footer a {
 }
 
 .navbar a:hover {
-  background: #f1f1f1;
+  background: #6a6a6a;
   color: black;
 }
 
@@ -130,11 +114,11 @@ footer a {
 }
 
 .navbar button {
-    align-self: center;
+    position: absolute;
     padding: 14px 16px;
     background: #f1f1f1;
-    size: 30%;
-    
+    width: "40";
+    height: "50";
 }
 
 

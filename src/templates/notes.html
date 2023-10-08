@@ -1,21 +1,77 @@
-<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block content %}
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/notes.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
     <title>Saved Notes</title>
-</head>
+</head> -->
+    <link rel="stylesheet" href="../static/css/notes.css">
+    
     <body>
-        <div class="notes">
+        <div class="notes container">
             {% for note in notes %}
-                <div class="note">
-                    <h3>{{note[0]}}</h3>
-                    <p style="display: none;">{{note[1]}}</p>
-                    <p>{{note[2]}}</p>
-                    
+                <div id="{{note[0]}}" class="note">
+                    <h3 id="{{note[0]}}-title">{{note[1]}}</h3>
+                    <p style="display: none;" id="{{note[0]}}-text">{{note[2]}}</p>
+                    <ul id="{{note[0]}}-notes">
+                        {% for bullet in note[3].split('</li><li>') %}
+                            <li>{{bullet.removeprefix('<li>').removesuffix('.</li>')}}</li>
+                        {% endfor %}
+                    </ul>
+                    <button onclick="viewText('{{note[0]}}');" id="{{note[0]}}-changeview">View Text</button>
+                    <button onclick="deleteNote('{{note[0]}}');">Delete Note</button>
                 </div>
             {% endfor %}
         </div>
     </body>
+    <script>
+        function viewText(token) {
+            text = document.getElementById(token + '-text')
+            notes = document.getElementById(token + '-notes')
+
+            text.style.display = 'block';
+            notes.style.display = 'none';
+
+            change_view = document.getElementById(token + '-changeview')
+
+            change_view.onclick = () => { viewNotes(token );}
+            change_view.innerHTML = 'View Note'
+        }
+
+        function viewNotes(token) {
+            text = document.getElementById(token + '-text')
+            notes = document.getElementById(token + '-notes')
+
+            text.style.display = 'none';
+            notes.style.display = 'block';
+
+            change_view = document.getElementById(token + '-changeview')
+
+            change_view.onclick = () => { viewText(token );}
+            change_view.innerHTML = 'View Text'
+        }
+
+        async function deleteNote(token) {
+
+            body = {token: token}
+
+            const response = await fetch('/api/deletenote', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {'content-type': 'application/json'}
+            });
+
+            json = await response.json();
+
+            if (json.success) {
+                document.getElementById(token).remove();
+            } else {
+                alert('Failed To Delete Note!')
+            }
+        }
+    </script>
 </html>
+{% endblock %}

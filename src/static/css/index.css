@@ -1,0 +1,14 @@
+input[type="file"] {
+    width: 100%;
+    padding: 10px 0 10px 10px ;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#transcription {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
