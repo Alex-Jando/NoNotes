@@ -73,7 +73,7 @@ def try_recognize(audio, max, i):
     t=''
     try:
         print(f"Progress: {i + 1}/{max}")
-        t = r.recognize_google(audio)
+        t = r.recognize_google(audio, enable_automatic_punctuation=True)
     except sr.UnknownValueError:
         print(f"Segment {i + 1} could not be transcribed.")
     except sr.RequestError as e:
