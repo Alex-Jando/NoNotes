@@ -12,7 +12,7 @@ async function send_audio(audioBlob) {
 
 navigator.mediaDevices.getUserMedia({ audio: true })
   .then(stream => {
-    const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/ogg; codecs=flac' });
+    const mediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/mpeg-3'});
     
 
     const audioChunks = [];
@@ -34,7 +34,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     
 
     mediaRecorder.addEventListener("stop", () => {
-      const audioBlob = new Blob(audioChunks, {type: "audio/ogg; codecs=flac"});
+      const audioBlob = new Blob(audioChunks, {type: "audio/mpeg-3"});
       send_audio(audioBlob)
     });
   }

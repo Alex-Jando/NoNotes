@@ -1,3 +1,4 @@
 src/env
 Pipfile
 Pipfile.lock
+env.ps1

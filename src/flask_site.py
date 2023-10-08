@@ -35,10 +35,6 @@ def _api_mp3tonotes():
 def _home():
     return(render_template('home.html'))
 
-@app.route('/')
-def _home():
-    return(render_template('home.html'))
-
 @app.route('/notes')
 def _notes():
     return(render_template('notes.html'))
@@ -46,15 +42,5 @@ def _notes():
 @app.route('/confirm-save')
 def _confirm_save():
     return(render_template('notes.html'))
-
-@app.route('/confirm-save')
-def _confirm_save():
-    return(render_template('home.html'))
-
-
-@app.route('/')
-def _():
-    return(render_template('home.html'))
-    return(render_template('home.html'))
 
 app.run(debug=True, host='localhost', port=80)
