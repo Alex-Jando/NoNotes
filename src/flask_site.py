@@ -9,6 +9,7 @@ app = Flask(__name__, template_folder='templates')
 def mp3tonotes():
     return render_template('mp3tonotes.html')
     
+    
 @app.route('/api/mp3tonotes', methods=['POST'])
 def _api_mp3tonotes():
     try:
@@ -30,20 +31,17 @@ def _api_mp3tonotes():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-@app.route('/')
-def _home():
-    return(render_template('home.html'))
-
 @app.route('/notes')
 def _notes():
-    return(render_template('notes.html'))
+    return(render_template('home.html'))
 
-@app.route('/confirm-save')
-def _confirm_save():
+@app.route('/confirmsave')
+def _confirmsave():
     return(render_template('home.html'))
 
 @app.route('/')
 def _():
-    return(render_template('home.html'))
+    return redirect('/mp3tonotes')
+    # return(render_template('home.html'))
 
 app.run(debug=True, host='localhost', port=80)
