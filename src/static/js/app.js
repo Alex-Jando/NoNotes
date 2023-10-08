@@ -102,43 +102,24 @@ async function sendAudio(blob) {
 }
 
 async function wav_to_text() {
-
-	startLoadingAnimation();
-
 	audio_file = document.getElementById('audio').files[0];
-	const form_data = new FormData();
-	form_data.append('audio', audio_file);
-
-	const response = await fetch("/api/mp3tonotes", {
-		method: "POST",
-		body: form_data,
-	});
-	if (response.ok) {
-		json = await response.json();
-		if (json.error) {
-			document.getElementById('notes').innerHTML = json.error
-		} else {
-			document.getElementById('notes').innerHTML = json.notes
-			document.getElementById('transcript').innerHTML = json.transcription
-			document.getElementById('change-view').style.display = 'block'
-		}
-	} else {
-		document.getElementById('notes').innerHTML = "Failed.";
-	}
-
-	stopLoadingAnimation();
+	sendAudio(audio_file);
 }
 
 function startLoadingAnimation() {
 	document.getElementById('notes').style.display = 'none';
 	document.getElementById('options').style.display = 'none';
 	document.getElementById('loader').style.display = 'block';
+
 	document.getElementById('audioSubmit').disabled = true;
+	document.getElementById('recordButton').disabled= true;
 }
 
 function stopLoadingAnimation() {
 	document.getElementById('notes').style.display = 'block';
 	document.getElementById('options').style.display = 'block';
 	document.getElementById('loader').style.display = 'none';
+
+	document.getElementById('audioSubmit').disabled = false;
 	document.getElementById('audioSubmit').disabled = false;
 }
