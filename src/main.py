@@ -88,4 +88,4 @@ def _api_deletenote():
 
 if __name__ == '__main__':
 
-    app.run(debug=True, host=args.host, port=args.port)
+    app.run(debug=True, host=args.ip, port=args.port)
