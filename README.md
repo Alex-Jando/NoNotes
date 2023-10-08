@@ -30,6 +30,12 @@ To install the **No Notes** app, follow these steps:
 3. Install the necessary packages:
 
    ```bash
+   .\setup.bat
+   ```
+
+   __OR__
+
+   ```bash
    pip install -r requirements.txt
    ```
 
@@ -37,7 +43,7 @@ To install the **No Notes** app, follow these steps:
    python -c "import nltk;nltk.download('punkt')"
    ```
 
-4. Start the app:
+5. Start the app:
 
    ```bash
    python src/main.py
