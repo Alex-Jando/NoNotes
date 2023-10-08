@@ -1,4 +1,6 @@
 src/env
+src/__pycache__
+res/audios
 Pipfile
 Pipfile.lock
 env.ps1

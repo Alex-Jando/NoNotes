@@ -1,16 +1,60 @@
-import nltk
-nltk.download('punkt')
+from flask import Flask, render_template, request, redirect, jsonify
 
-from summarizer import Summarizer
+from transcription_generator import transcription_generator as tg
+from transcription_generator import TRANSCRIPTION_OUTPUT_DIR, get_transcription
+from summarize import summarize_text
 
-def summarize_text(input_text):
-    bert_model = Summarizer()
+import os
+import requests
 
-    summary = bert_model(input_text, ratio=0.2)
+app = Flask(__name__, template_folder='templates')
 
-    bullets = []
+@app.route('/mp3tonotes', methods=['POST', 'GET'])
+def mp3tonotes():
+    return render_template('mp3tonotes.html')
+    
+    
+@app.route('/api/mp3tonotes', methods=['POST'])
+def _api_mp3tonotes():
+    
+    try:
 
-    for bullet in summary.split('. '):
-        bullets.append(bullet + '.')
+        file = request.files['audio']
 
-    return bullets
+        file.save(os.path.join(os.path.dirname(__file__), '..', 'uploads/audio.wav'))
+            
+        tg()
+
+        while get_transcription() is None:
+            pass
+        
+        os.remove(os.path.join(os.path.dirname(__file__), '..', 'uploads/audio.wav'))
+
+        transcription = get_transcription()
+
+        response = requests.post('http://bark.phon.ioc.ee/punctuator', data = {'text': transcription})
+
+        if not response.ok:
+            raise Exception('Error adding punctuation to transcription!')
+        
+        summary = summarize_text(response.text)
+
+        return jsonify({'summary': ''.join([f'<li>{bullet}</li>' for bullet in summary])})
+    
+    except Exception as e:
+
+        return jsonify({'error': str(e)})
+
+@app.route('/')
+def _home():
+    return(render_template('home.html'))
+
+@app.route('/notes')
+def _notes():
+    return(render_template('home.html'))
+
+@app.route('/confirmsave')
+def _confirmsave():
+    return(render_template('notes.html'))
+
+app.run(debug=True, host='localhost', port=80)
