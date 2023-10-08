@@ -17,13 +17,14 @@
 
             <div>
                 <div id="loader" class="hidden"><div>Processing... (This may take a few minutes)</div><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
-                <ul id="notes" class="hidden"></ul>
-                <div id="transcript" class="hidden"></div>
-                <button onclick="viewText();" id="change-view" style="display: none;">View Text</button>
             </div>
             
             <div class="hidden" id="options">
                 <br><hr><br>
+                <ul id="notes" class="hidden"></ul>
+                <div id="transcript" class="hidden"></div>
+                <button onclick="viewText();" id="change-view" style="display: none;">View Text</button>
+                <br><hr>
                 <h3>Save note</h3>
                 <label for="noteTitle">Pick a note title:</label>
                 <input type="text" name="noteTitle" id="noteTitle" required>
@@ -88,12 +89,16 @@
         }
 
         async function copynotes () {
-            try {
-                await navigator.clipboard.writeText(document.getElementById('transcript').innerText);
-                alert('Copied To Clipboard!');
-            } catch (err) {
-                alert('Failed To Copy To Clipboard: ' + err);
-            }
+            const targetElement = document.getElementById('notes').style.display === 'none'
+        ? document.getElementById('transcript')
+        : document.getElementById('notes');
+    
+        try {
+            await navigator.clipboard.writeText(targetElement.innerText);
+            alert(`Copied ${targetElement.id === 'notes' ? 'notes' : 'transcript'}!`);
+        } catch (err) {
+            alert(`Failed To Copy To Clipboard: ${err}`);
+        }
         }
     </script>
     <script src="../static/js/app.js"></script>
