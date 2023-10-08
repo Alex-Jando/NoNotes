@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MP3 To Notes</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        #loader {
+            display: none;
+        }
+    </style>
 </head>
     <body>
         <header>
@@ -12,9 +18,10 @@
         <main>
             <label for="audio">Select an audio file (.wav):</label>
             <input type="file" name="audio" id="audio" accept=".wav" required>
-            <button type="submit" onclick="mp3_to_text();">Convert To Notes</button>
+            <button id="audioSubmit" type="submit" onclick="mp3_to_text();">Convert To Notes</button>
 
-            <div id="transcription"></div>
+            <div id="loader" class="hidden">Converting...<span class="spinner"></span></div>
+            <ul id="summary" class="hidden"></ul>
 
         </main>
         <footer>
@@ -32,24 +39,35 @@
             audio_file = document.getElementById('audio').files[0];
             const form_data = new FormData();
             form_data.append('audio', audio_file);
+
             const response = await fetch("/api/mp3tonotes", {
-                                        method: "POST",
-                                        body: form_data,
-                                    });
-            json = await response.json();
-            if (json.error) {
-                document.getElementById('transcription').innerHTML = json.error
+                                            method: "POST",
+                                            body: form_data,
+                                        });
+            if(response.ok) {
+                json = await response.json();
+                if (json.error) {
+                    document.getElementById('summary').innerHTML = json.error
+                } else {
+                    document.getElementById('summary').innerHTML = json.summary
+                }
             } else {
-                document.getElementById('transcription').innerHTML = json.transcription
+                document.getElementById('summary').innerHTML = "Response not OK.";
             }
 
             stopLoadingAnimation();            
         }
         function startLoadingAnimation() {
-            return
+            document.getElementById('summary').style.display = 'none';
+
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('audioSubmit').disabled = true;
         }
         function stopLoadingAnimation() {
-            return
+            document.getElementById('summary').style.display = 'block';
+
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('audioSubmit').disabled = false;
         }
     </script>
 </html>

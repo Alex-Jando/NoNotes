@@ -6,7 +6,7 @@ from summarizer import Summarizer
 def summarize_text(input_text):
     bert_model = Summarizer()
 
-    summary = bert_model(input_text, ratio=0.2)
+    summary = bert_model(input_text, ratio=0.5)
 
     bullets = []
 
