@@ -1,6 +1,4 @@
 import nltk
-nltk.download('punkt')
-
 from summarizer import Summarizer
 
 def summarize_text(input_text):

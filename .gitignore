@@ -5,3 +5,4 @@ Pipfile
 Pipfile.lock
 env.ps1
 storage.db
+src/storage.db

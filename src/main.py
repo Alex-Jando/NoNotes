@@ -1,3 +1,12 @@
+import argparse
+
+parser = argparse.ArgumentParser(description='Run the server.')
+
+parser.add_argument('-i', '--ip', type=str, help='The host to run the server on.', default='127.0.0.1')
+parser.add_argument('-p', '--port', type=int, help='The port to run the server on.', default=80)
+
+args = parser.parse_args()
+
 from flask import Flask, render_template, request, redirect, jsonify
 from transcription import transcription_generator as tg
 from summarize import summarize_text
@@ -77,4 +86,6 @@ def _api_deletenote():
 
         return jsonify({'success': False, 'error': f'Unable to delete note! Error: {e}'})
 
-app.run(debug=True, host='localhost', port=80)
+if __name__ == '__main__':
+
+    app.run(debug=True, host=args.host, port=args.port)

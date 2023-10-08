@@ -1,13 +1,11 @@
-//webkitURL is deprecated but nevertheless
 URL = window.URL || window.webkitURL;
 
-var gumStream; 						//stream from getUserMedia()
-var rec; 							//Recorder.js object
-var input; 							//MediaStreamAudioSourceNode we'll be recording
+var gumStream;
+var rec;
+var input;
 
-// shim for AudioContext when it's not avb. 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
-var audioContext //audio context to help us record
+var audioContext;
 
 var recordButton = document.getElementById("recordButton");
 var stopButton = document.getElementById("stopButton");
@@ -18,7 +16,6 @@ stopButton.addEventListener("click", stopRecording);
 pauseButton.addEventListener("click", pauseRecording);
 
 function startRecording() {
-	console.log("recordButton clicked");
 
 	var constraints = { audio: true, video: false }
 
@@ -27,7 +24,6 @@ function startRecording() {
 	pauseButton.disabled = false
 
 	navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-		console.log("getUserMedia() success, stream created, initializing Recorder.js ...");
 
 		audioContext = new AudioContext();
 
@@ -39,8 +35,6 @@ function startRecording() {
 
 		rec.record()
 
-		console.log("Recording started");
-
 	}).catch(function (err) {
 		recordButton.disabled = false;
 		stopButton.disabled = true;
@@ -49,7 +43,6 @@ function startRecording() {
 }
 
 function pauseRecording() {
-	console.log("pauseButton clicked rec.recording=", rec.recording);
 	if (rec.recording) {
 		//pause
 		rec.stop();
