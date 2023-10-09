@@ -14,6 +14,10 @@ from database import add_note, get_note, get_notes, update_note, delete_note, de
 import os
 import requests
 
+if not os.path.exists(os.path.join(os.path.dirname(__file__), '..', 'uploads')):
+    os.mkdir(os.path.join(os.path.dirname(__file__), '..', 'uploads'))
+
+
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/', methods=['POST', 'GET'])
