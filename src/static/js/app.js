@@ -113,6 +113,6 @@ function stopLoadingAnimation() {
 	document.getElementById('options').style.display = 'block';
 	document.getElementById('loader').style.display = 'none';
 
-	document.getElementById('audioSubmit').disabled = false;
+	document.getElementById('recordButton').disabled = false;
 	document.getElementById('audioSubmit').disabled = false;
 }
