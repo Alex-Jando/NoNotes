@@ -1,7 +1,7 @@
-# First Place!!!
+# First Place!!!🏆🏆🏆🏆
 [Devpost Page](https://devpost.com/software/noname-pht40q?ref_content=my-projects-tab&ref_feature=my_projects)
  
- # No Notes (HappyHacks October 2023 Project)
+ # No Notes (HappyHacks October 2023 Project 
 
 ## Overview
 
