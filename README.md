@@ -28,7 +28,7 @@ To install the **No Notes** app, follow these steps:
 2. Navigate to the app's directory:
 
    ```bash
-   cd HappyHack-October2023
+   cd NoNotes
    ```
 
 3. Install the necessary packages:
